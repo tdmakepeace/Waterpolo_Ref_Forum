@@ -10,15 +10,44 @@
         <a class="btn btn-primary" href="{{ url_for('forum.new_question') }}">Ask a question</a>
         {% endif %}
       </div>
+      {% set tab_query = {'q': keyword} if keyword else {} %}
+      <form class="mb-3" method="get" action="{{ url_for('forum.list_questions') }}" role="search">
+        <input type="hidden" name="tab" value="{{ tab }}">
+        <label class="form-label visually-hidden" for="question-keyword">Keyword search</label>
+        <div class="input-group">
+          <input
+            id="question-keyword"
+            class="form-control"
+            type="search"
+            name="q"
+            value="{{ keyword }}"
+            maxlength="80"
+            pattern="[A-Za-z0-9 ]*"
+            title="Letters, numbers, and spaces only"
+            placeholder="Filter by keyword"
+            autocomplete="off"
+            inputmode="text"
+            oninput="this.value = this.value.replace(/[^A-Za-z0-9 ]+/g, '')"
+          >
+          <button class="btn btn-primary" type="submit">Search</button>
+          {% if keyword %}
+          <a class="btn btn-outline-secondary" href="{{ url_for('forum.list_questions', tab=tab) }}">Clear</a>
+          {% endif %}
+        </div>
+      </form>
       <ul class="nav nav-tabs mb-3">
-        <li class="nav-item"><a class="nav-link {% if tab == 'open' %}active{% endif %}" href="{{ url_for('forum.list_questions', tab='open') }}">Open</a></li>
-        <li class="nav-item"><a class="nav-link {% if tab == 'closed' %}active{% endif %}" href="{{ url_for('forum.list_questions', tab='closed') }}">Closed</a></li>
+        <li class="nav-item"><a class="nav-link {% if tab == 'open' %}active{% endif %}" href="{{ url_for('forum.list_questions', tab='open', **tab_query) }}">Open</a></li>
+        <li class="nav-item"><a class="nav-link {% if tab == 'closed' %}active{% endif %}" href="{{ url_for('forum.list_questions', tab='closed', **tab_query) }}">Closed</a></li>
         {% if current_user.is_authenticated %}
-        <li class="nav-item"><a class="nav-link {% if tab == 'hidden' %}active{% endif %}" href="{{ url_for('forum.list_questions', tab='hidden') }}">Hidden</a></li>
+        <li class="nav-item"><a class="nav-link {% if tab == 'hidden' %}active{% endif %}" href="{{ url_for('forum.list_questions', tab='hidden', **tab_query) }}">Hidden</a></li>
         {% endif %}
       </ul>
       {% if not questions %}
+        {% if keyword %}
+        <p class="text-muted mb-0">No questions match "{{ keyword }}".</p>
+        {% else %}
         <p class="text-muted mb-0">No questions in this list yet.</p>
+        {% endif %}
       {% endif %}
       {% for q in questions %}
         {% set user_vote = votes_by_question.get(q.id) %}

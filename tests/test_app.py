@@ -258,6 +258,71 @@ def test_import_resource_links_adds_missing_and_skips_existing(app, tmp_path):
         assert original.sort_order == 1
 
 
+def test_keyword_filter_applies_across_tabs_and_strips_invalid_chars(app, client):
+    with app.app_context():
+        user = _make_user("searcher@example.com", nickname="Search1")
+        staff = _make_user("staffsearch@example.com", nickname="Staff1", role="supervisor")
+        db.session.add_all(
+            [
+                Question(
+                    user_id=user.id,
+                    author_nickname=user.nickname,
+                    title="Exclusion at 6m",
+                    body="Is this a penalty or exclusion?",
+                ),
+                Question(
+                    user_id=user.id,
+                    author_nickname=user.nickname,
+                    title="Goalie throw",
+                    body="Can the goalie throw past half?",
+                ),
+                Question(
+                    user_id=user.id,
+                    author_nickname=user.nickname,
+                    title="Closed exclusion",
+                    body="Old exclusion discussion.",
+                    status=STATUS_CLOSED,
+                ),
+                Question(
+                    user_id=user.id,
+                    author_nickname=user.nickname,
+                    title="Hidden exclusion",
+                    body="Sensitive exclusion thread.",
+                    is_hidden=True,
+                ),
+            ]
+        )
+        db.session.commit()
+
+    listing = client.get("/questions?tab=open")
+    assert b'id="question-keyword"' in listing.data
+    assert b'pattern="[A-Za-z0-9 ]*"' in listing.data
+
+    open_filtered = client.get("/questions?tab=open&q=exclusion")
+    assert b"Exclusion at 6m" in open_filtered.data
+    assert b"Goalie throw" not in open_filtered.data
+    assert b"q=exclusion" in open_filtered.data
+    assert b"tab=closed" in open_filtered.data
+
+    punctuated = client.get("/questions?tab=open&q=exclusion!!!")
+    assert b"Exclusion at 6m" in punctuated.data
+    assert b"Goalie throw" not in punctuated.data
+    assert b'value="exclusion"' in punctuated.data
+
+    symbols_only = client.get("/questions?tab=open&q=!!!")
+    assert b"Exclusion at 6m" in symbols_only.data
+    assert b"Goalie throw" in symbols_only.data
+
+    closed_filtered = client.get("/questions?tab=closed&q=exclusion")
+    assert b"Closed exclusion" in closed_filtered.data
+    assert b"Exclusion at 6m" not in closed_filtered.data
+
+    client.post("/login", data={"email": "staffsearch@example.com", "password": "password12"})
+    hidden_filtered = client.get("/questions?tab=hidden&q=exclusion")
+    assert b"Hidden exclusion" in hidden_filtered.data
+    assert b"Closed exclusion" not in hidden_filtered.data
+
+
 def test_import_resource_links_dry_run_does_not_write(app, tmp_path):
     catalog = tmp_path / "links.json"
     catalog.write_text(

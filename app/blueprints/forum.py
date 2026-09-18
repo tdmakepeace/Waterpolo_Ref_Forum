@@ -1,8 +1,9 @@
+import re
 from datetime import datetime, timezone
 
 from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
-from sqlalchemy import desc
+from sqlalchemy import desc, or_
 
 from app.extensions import db
 from app.forms import QuestionForm, ReplyForm
@@ -18,6 +19,17 @@ from app.permissions import supervisor_required
 
 forum_bp = Blueprint("forum", __name__)
 
+KEYWORD_MAX_LENGTH = 80
+NON_KEYWORD_CHARS = re.compile(r"[^A-Za-z0-9 ]+")
+MULTI_SPACE = re.compile(r"\s+")
+
+
+def sanitize_keyword(raw):
+    if not raw:
+        return ""
+    cleaned = NON_KEYWORD_CHARS.sub("", str(raw))
+    return MULTI_SPACE.sub(" ", cleaned).strip()[:KEYWORD_MAX_LENGTH]
+
 
 def public_question_query():
     return Question.query.filter_by(is_hidden=False)
@@ -31,7 +43,7 @@ def visible_question_or_404(question_id):
     return question
 
 
-def listing_query(tab, include_hidden=False):
+def listing_query(tab, include_hidden=False, keyword=""):
     query = Question.query
     if tab == "hidden":
         query = query.filter_by(is_hidden=True)
@@ -44,20 +56,36 @@ def listing_query(tab, include_hidden=False):
         )
     else:
         query = query.filter(Question.is_hidden.is_(False), Question.status == STATUS_OPEN)
+    keyword = sanitize_keyword(keyword)
+    if keyword:
+        for token in keyword.split():
+            pattern = f"%{token}%"
+            query = query.filter(
+                or_(Question.title.ilike(pattern), Question.body.ilike(pattern))
+            )
     return query.order_by(desc(Question.score), desc(Question.created_at))
+
+
+def question_list_context():
+    tab = request.args.get("tab", "open")
+    if tab not in ("open", "closed", "hidden"):
+        tab = "open"
+    keyword = sanitize_keyword(request.args.get("q", ""))
+    questions = listing_query(tab, keyword=keyword).all()
+    return {
+        "questions": questions,
+        "tab": tab,
+        "keyword": keyword,
+        "votes_by_question": _vote_map(questions),
+    }
 
 
 @forum_bp.route("/questions")
 def list_questions():
-    tab = request.args.get("tab", "open")
-    if tab not in ("open", "closed", "hidden"):
-        tab = "open"
-    if tab == "hidden" and not current_user.is_authenticated:
+    ctx = question_list_context()
+    if ctx["tab"] == "hidden" and not current_user.is_authenticated:
         abort(404)
-    questions = listing_query(tab).all()
-    return render_template(
-        "forum/list.html", questions=questions, tab=tab, votes_by_question=_vote_map(questions)
-    )
+    return render_template("forum/list.html", **ctx)
 
 
 def _vote_map(questions):

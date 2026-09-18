@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template
 
-from app.blueprints.forum import listing_query, _vote_map
+from app.blueprints.forum import question_list_context
 from app.models.resource_link import ResourceLink
 
 main_bp = Blueprint("main", __name__)
@@ -8,23 +8,14 @@ main_bp = Blueprint("main", __name__)
 
 @main_bp.route("/")
 def home():
-    tab = request.args.get("tab", "open")
-    if tab not in ("open", "closed", "hidden"):
-        tab = "open"
-    if tab == "hidden":
+    ctx = question_list_context()
+    if ctx["tab"] == "hidden":
         from flask_login import current_user
         from flask import abort
 
         if not current_user.is_authenticated:
             abort(404)
-    questions = listing_query(tab).all()
-    return render_template(
-        "forum/list.html",
-        questions=questions,
-        tab=tab,
-        votes_by_question=_vote_map(questions),
-        is_home=True,
-    )
+    return render_template("forum/list.html", is_home=True, **ctx)
 
 
 @main_bp.route("/resources")
