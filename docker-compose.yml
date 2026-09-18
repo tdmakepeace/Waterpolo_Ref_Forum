@@ -21,6 +21,7 @@ services:
       SECRET_KEY: ${SECRET_KEY}
       FLASK_ENV: ${FLASK_ENV:-production}
       FLASK_APP: app:create_app
+      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-false}
     volumes:
       - ./config.yml:/app/config.yml:ro
     depends_on:

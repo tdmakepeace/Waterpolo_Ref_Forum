@@ -58,6 +58,8 @@ Questions are on **Open** and **Closed** tabs, ordered by vote score (up +1, dow
 
 `.env` holds `SECRET_KEY` and the Compose Postgres variables. Do not commit `.env` or `config.yml`.
 
+For HTTP access (typical laptop Docker on port 10010), keep `SESSION_COOKIE_SECURE=false`. Set it to `true` only when the site is served over HTTPS.
+
 ## Backup
 
 ```bash

@@ -16,6 +16,13 @@ def load_yaml_config(path=None):
         return yaml.safe_load(handle) or {}
 
 
+def _env_flag(env, key, default=False):
+    raw = env.get(key)
+    if raw is None:
+        return default
+    return raw.strip().lower() in ("1", "true", "yes", "on")
+
+
 def database_uri(yaml_cfg, override=None):
     if override:
         return override
@@ -39,10 +46,16 @@ class Config:
         self.SQLALCHEMY_TRACK_MODIFICATIONS = False
         self.WTF_CSRF_ENABLED = True
         self.REMEMBER_COOKIE_DURATION = 60 * 60 * 24 * 7
+        # HTTP Docker deploys must not use Secure cookies, or the CSRF token
+        # never lands in the session ("The CSRF session token is missing").
+        secure_cookies = _env_flag(env, "SESSION_COOKIE_SECURE", False)
         self.SESSION_COOKIE_HTTPONLY = True
         self.SESSION_COOKIE_SAMESITE = "Lax"
-        flask_env = env.get("FLASK_ENV", "production")
-        self.SESSION_COOKIE_SECURE = flask_env == "production"
+        self.SESSION_COOKIE_SECURE = secure_cookies
+        self.REMEMBER_COOKIE_SECURE = secure_cookies
+        self.REMEMBER_COOKIE_HTTPONLY = True
+        self.REMEMBER_COOKIE_SAMESITE = "Lax"
+        self.WTF_CSRF_SSL_STRICT = secure_cookies
         self.SITE_TITLE = yaml_cfg.get("site_title") or "LWPL - Referee Forum"
         self.BACKDROP_IMAGE_URL = yaml_cfg.get("backdrop_image_url") or ""
         self.FIRST_ADMIN = yaml_cfg.get("first_admin") or {}
