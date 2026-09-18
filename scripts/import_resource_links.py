@@ -17,6 +17,10 @@ Local Flask:
 """
 import argparse
 import sys
+from pathlib import Path
+
+# `python scripts/foo.py` puts scripts/ on sys.path, not the repo root.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from app import create_app
 from app.resource_import import import_resource_links

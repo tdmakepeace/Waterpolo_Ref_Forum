@@ -1,4 +1,9 @@
 """CLI helper — the web process also runs this on startup via create_app()."""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from app import create_app
 from app.bootstrap import bootstrap_first_admin, seed_default_resource_link
 
