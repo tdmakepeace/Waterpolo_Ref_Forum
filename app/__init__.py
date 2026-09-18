@@ -54,11 +54,13 @@ def create_app(test_config=None):
     from app.blueprints.auth import auth_bp
     from app.blueprints.forum import forum_bp
     from app.blueprints.main import main_bp
+    from app.cli import register_cli
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(forum_bp)
     app.register_blueprint(admin_bp)
+    register_cli(app)
 
     @app.errorhandler(403)
     def forbidden(_error):

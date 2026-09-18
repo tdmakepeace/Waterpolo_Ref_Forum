@@ -1,0 +1,165 @@
+{
+  "links": [
+    {
+      "title": "LWPL — League Rules",
+      "url": "https://lwpl.leaguerepublic.com/page/london_water_polo_league_rules.html",
+      "description": "London Water Polo League rules. Matches follow FINA/Swim England rules where practical (rule 4.33), with local exceptions in 4.34: four quarters of at least 7 minutes, 30/20 shot clock where possible, 2-minute interval, and pitch size limited by the pool. Referee duties, quotas, match sheets, expenses and sanctions are in sections 4.10–4.20, 4.35–4.40 and Appendix III.",
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "title": "LWPL — Referee Sanctions Report",
+      "url": "https://lwpl.leaguerepublic.com/page/referee_sanctions.html",
+      "description": "Form for referees to report a sanction from a fixture they officiated. LWPL escalates reports to Swim England’s Office of Judicial Administration.",
+      "sort_order": 11,
+      "is_active": true
+    },
+    {
+      "title": "LWPL — Winter 2025–26 Referee Allocations",
+      "url": "https://lwpl.leaguerepublic.com/page/winter_2526_referees_allocations.html",
+      "description": "Published referee appointments for LWPL Winter 2025–2026 fixtures.",
+      "sort_order": 12,
+      "is_active": true
+    },
+    {
+      "title": "LWPL — Summer 2026 Referee Allocations",
+      "url": "https://lwpl.leaguerepublic.com/page/summer_2026_referees_allocation.html",
+      "description": "Published referee appointments for LWPL Summer 2026 fixtures.",
+      "sort_order": 13,
+      "is_active": true
+    },
+    {
+      "title": "LWPL — Match Sheets",
+      "url": "https://lwpl.leaguerepublic.com/page/results_match_sheets.html",
+      "description": "Official match-sheet folders. Referees must check the sheet before play and sign it at the end, recording disciplinary issues and expenses (rules 4.20, 4.38, 4.40).",
+      "sort_order": 14,
+      "is_active": true
+    },
+    {
+      "title": "World Aquatics — Water Polo Rules (landing page)",
+      "url": "https://www.worldaquatics.com/water-polo/rules",
+      "description": "Official World Aquatics (formerly FINA) water polo rules hub.",
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "title": "World Aquatics — Competition Regulations",
+      "url": "https://www.worldaquatics.com/rules/competition-regulations",
+      "description": "Current and archived competition regulations. Current version: February 2026 (updated 18 Feb 2026). Water polo is Part Six; referee signals are Appendix 2.",
+      "sort_order": 21,
+      "is_active": true
+    },
+    {
+      "title": "World Aquatics — Competition Regulations PDF (Feb 2026)",
+      "url": "https://resources.fina.org/fina/document/2026/02/18/e6815ecc-06d9-4f0b-98e9-4c441cf5e6a3/2026-02-18_World-Aquatics_CR-Final.pdf",
+      "description": "Full current regulations PDF. Water polo starts at Part Six (p.214). Technical officials p.216; ordinary/exclusion/penalty fouls p.227–233; signals Appendix 2 p.247; VAR Appendix 4; coach’s challenge Appendix 5.",
+      "sort_order": 22,
+      "is_active": true
+    },
+    {
+      "title": "World Aquatics — Water Polo Extract (June 2025)",
+      "url": "https://www.bwpl.org/uploads/2/6/5/9/26598283/wa_competition-regulations_june-2025_updated-25-06-2025_water_polo_extract.pdf",
+      "description": "Water polo-only extract of the June 2025 regulations (the version Swim England applied to English clubs from 1 July 2025). Useful shorter reading than the full book.",
+      "sort_order": 23,
+      "is_active": true
+    },
+    {
+      "title": "June 2025 Rule Changes — Summary",
+      "url": "https://ocs-sport.ams3.digitaloceanspaces.com/scotswim-full/2025/07/22155851/World-Aquatics-Water-Polo-rule-changes-June-2025-Summary-of-Changes.pdf",
+      "description": "Short summary of the June 2025 changes: 25m pitch, 14-player squads, 28/18 possession, improper re-entry as a penalty, timeout/restart and goalkeeper-substitution updates. Compare with LWPL 4.34 local exceptions.",
+      "sort_order": 24,
+      "is_active": true
+    },
+    {
+      "title": "July 2025 Rules — Tracked Changes",
+      "url": "https://irelandwaterpolo.ie/wp-content/uploads/2025/07/World-Aquatic-Water-Polo-Rules-July-2025-Tracked-Changes.pdf",
+      "description": "World Aquatics water polo rules with tracked changes, useful for seeing what moved.",
+      "sort_order": 25,
+      "is_active": true
+    },
+    {
+      "title": "Swim England — Water Polo Rule Updates",
+      "url": "https://www.swimming.org/waterpolo/latest-water-polo-updates/",
+      "description": "Swim England briefing for English clubs: World Aquatics June 2025 rules effective 1 July 2025, with links to the summary and full regulations.",
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "title": "Swim England — 2023 Rule Changes (still useful clarifications)",
+      "url": "https://www.swimming.org/waterpolo/new-rule-chages-2023/",
+      "description": "British Swimming / GB World Aquatics referees’ summary of the 2023 changes, including delayed penalty calls, goal area, and LEN instructions on goalkeeper-underwater and illegal re-entry.",
+      "sort_order": 31,
+      "is_active": true
+    },
+    {
+      "title": "Swim England — Officials Hub",
+      "url": "https://www.swimming.org/waterpolo/water-polo-officials-referees-resources-and-licensing/",
+      "description": "Training, licensing, grading and rule-update articles for water polo officials.",
+      "sort_order": 32,
+      "is_active": true
+    },
+    {
+      "title": "Swim England — Referee Gradings",
+      "url": "https://www.swimming.org/waterpolo/referee-gradings/",
+      "description": "Club, Regional, National and International referee grades and how they replaced P/D/C/B/A.",
+      "sort_order": 33,
+      "is_active": true
+    },
+    {
+      "title": "Swim England — Table Officials Resource",
+      "url": "https://www.swimming.org/waterpolo/free-water-polo-table-officials-resource/",
+      "description": "Free Club Table Official course covering officials’ roles, table duties and pitch set-up.",
+      "sort_order": 34,
+      "is_active": true
+    },
+    {
+      "title": "Video — LEN / European Aquatics Referee Clinic 2023–24",
+      "url": "https://www.youtube.com/watch?v=61NWaG4Ldyc&list=PL6nb0U2ydhO79s22gFlVrJcGriFiOmhES",
+      "description": "YouTube playlist: full LEN referee clinic replay (rules, impeding, centre position, penalties, how to improve as a referee).",
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "title": "Video — Swim Ireland Referee Signals",
+      "url": "https://www.youtube.com/watch?v=ilndVCsel8Y",
+      "description": "YouTube explainer of water polo referee hand signals.",
+      "sort_order": 41,
+      "is_active": true
+    },
+    {
+      "title": "Video — CWPA Referee Education Library",
+      "url": "https://collegiatewaterpolo.org/officiating/referee-education/referee-education-video-library/",
+      "description": "Open referee video library: hand signals, contra fouls, exclusions, timeouts, cards, swim-offs and related calls. NCAA/US context; signals are still useful.",
+      "sort_order": 42,
+      "is_active": true
+    },
+    {
+      "title": "European Aquatics — Referee Clinic Page",
+      "url": "https://europeanaquatics.org/sports/water-polo/len-referee-clinic-2023-2024/",
+      "description": "LEN/European Aquatics 2023–24 referee clinic hub with the YouTube replay link.",
+      "sort_order": 43,
+      "is_active": true
+    },
+    {
+      "title": "European Aquatics Academy — Referee Courses",
+      "url": "https://www.eaacademy.eu/lms/courses/water-polo-referees-school",
+      "description": "Official learning centre for European Aquatics referee schools and clinics (rule application, centre play, penalties, VAR). Some sessions need enrolment.",
+      "sort_order": 44,
+      "is_active": true
+    },
+    {
+      "title": "BWPL — League Rules",
+      "url": "https://www.bwpl.org/rules.html",
+      "description": "British Water Polo League competition rules (useful when LWPL refs also work BWPL).",
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "title": "BWPL — Officials’ Charter",
+      "url": "https://www.bwpl.org/uploads/2/6/5/9/26598283/bwpl_officials_charter.pdf",
+      "description": "Guiding principles for delegates, referees and table officials at BWPL matches.",
+      "sort_order": 51,
+      "is_active": true
+    }
+  ]
+}

@@ -216,3 +216,59 @@ def test_generate_unique_nickname(app):
     with app.app_context():
         nick = generate_unique_nickname()
         assert len(nick) == 8
+
+
+def test_import_resource_links_adds_missing_and_skips_existing(app, tmp_path):
+    catalog = tmp_path / "links.json"
+    catalog.write_text(
+        '{"links":['
+        '{"title":"Rules A","url":"https://example.com/a","sort_order":1},'
+        '{"title":"Rules B","url":"https://example.com/b","description":"B","sort_order":2}'
+        "]}",
+        encoding="utf-8",
+    )
+    from app.models.resource_link import ResourceLink
+    from app.resource_import import import_resource_links
+
+    with app.app_context():
+        db.session.add(
+            ResourceLink(
+                title="Old A",
+                url="https://example.com/a",
+                description="keep me",
+                sort_order=9,
+                is_active=True,
+            )
+        )
+        db.session.commit()
+        skipped = import_resource_links(path=catalog)
+        assert skipped["added"] == 1
+        assert skipped["updated"] == 0
+        assert skipped["skipped"] == 1
+        assert ResourceLink.query.count() == 2
+        original = ResourceLink.query.filter_by(url="https://example.com/a").one()
+        assert original.title == "Old A"
+        assert original.description == "keep me"
+
+        refreshed = import_resource_links(path=catalog, update=True)
+        assert refreshed["added"] == 0
+        assert refreshed["updated"] == 2
+        original = ResourceLink.query.filter_by(url="https://example.com/a").one()
+        assert original.title == "Rules A"
+        assert original.sort_order == 1
+
+
+def test_import_resource_links_dry_run_does_not_write(app, tmp_path):
+    catalog = tmp_path / "links.json"
+    catalog.write_text(
+        '{"links":[{"title":"Rules C","url":"https://example.com/c","sort_order":3}]}',
+        encoding="utf-8",
+    )
+    from app.models.resource_link import ResourceLink
+    from app.resource_import import import_resource_links
+
+    with app.app_context():
+        result = import_resource_links(path=catalog, dry_run=True)
+        assert result["added"] == 1
+        assert result["dry_run"] is True
+        assert ResourceLink.query.count() == 0

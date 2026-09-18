@@ -4,6 +4,7 @@ from app.extensions import db
 from app.models.resource_link import ResourceLink
 from app.models.user import User
 from app.nicknames import resolve_nickname
+from app.resource_import import import_resource_links
 
 
 def bootstrap_first_admin():
@@ -46,15 +47,11 @@ def bootstrap_first_admin():
 
 
 def seed_default_resource_link():
+    """Seed the bundled catalog only when the resources table is empty.
+
+    Existing deployments keep their current links. To add or refresh the
+    referee catalog, run `python scripts/import_resource_links.py`.
+    """
     if ResourceLink.query.first() is not None:
         return
-    db.session.add(
-        ResourceLink(
-            title="World Aquatics Water Polo Rules",
-            url="https://www.worldaquatics.com/water-polo/rules",
-            description="Official water polo rules from World Aquatics (formerly FINA).",
-            sort_order=1,
-            is_active=True,
-        )
-    )
-    db.session.commit()
+    import_resource_links()
