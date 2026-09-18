@@ -253,6 +253,22 @@ def delete_question(question_id):
     return redirect(url_for("forum.list_questions"))
 
 
+@forum_bp.route("/replies/<int:reply_id>/high-quality", methods=["POST"])
+@login_required
+def toggle_high_quality(reply_id):
+    reply = Reply.query.get_or_404(reply_id)
+    question = visible_question_or_404(reply.question_id)
+    if not question.can_mark_high_quality(current_user):
+        abort(403)
+    reply.is_high_quality = not reply.is_high_quality
+    db.session.commit()
+    if reply.is_high_quality:
+        flash("Reply marked as high quality.", "success")
+    else:
+        flash("High quality mark removed.", "info")
+    return redirect(url_for("forum.detail", question_id=question.id))
+
+
 @forum_bp.route("/replies/<int:reply_id>/delete", methods=["POST"])
 @supervisor_required
 def delete_reply(reply_id):

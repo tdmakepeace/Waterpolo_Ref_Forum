@@ -15,6 +15,7 @@ class Reply(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     author_nickname = db.Column(db.String(80), nullable=False)
     body = db.Column(db.Text, nullable=False)
+    is_high_quality = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(
         db.DateTime(timezone=True),
         nullable=False,

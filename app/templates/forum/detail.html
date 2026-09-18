@@ -75,15 +75,28 @@
   <hr>
   <h2 class="h5">Replies</h2>
   {% for reply in question.replies %}
-    <div class="border-bottom py-3">
-      <div class="small text-muted">{{ reply.author_nickname }} · {{ reply.created_at }}</div>
+    <div class="border-bottom py-3{% if reply.is_high_quality %} reply-high-quality{% endif %}">
+      <div class="small text-muted">
+        {{ reply.author_nickname }} · {{ reply.created_at }}
+        {% if reply.is_high_quality %}<span class="badge text-bg-primary">High quality</span>{% endif %}
+      </div>
       <p class="mb-1" style="white-space: pre-wrap;">{{ reply.body }}</p>
-      {% if current_user.is_authenticated and current_user.is_staff %}
-      <form method="post" action="{{ url_for('forum.delete_reply', reply_id=reply.id) }}" onsubmit="return confirm('Delete this reply?');">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <button class="btn btn-link btn-sm text-danger p-0" type="submit">Delete reply</button>
-      </form>
-      {% endif %}
+      <div class="d-flex flex-wrap gap-3">
+        {% if question.can_mark_high_quality(current_user) %}
+        <form method="post" action="{{ url_for('forum.toggle_high_quality', reply_id=reply.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="btn btn-link btn-sm p-0" type="submit">
+            {% if reply.is_high_quality %}Remove high quality{% else %}Mark as high quality{% endif %}
+          </button>
+        </form>
+        {% endif %}
+        {% if current_user.is_authenticated and current_user.is_staff %}
+        <form method="post" action="{{ url_for('forum.delete_reply', reply_id=reply.id) }}" onsubmit="return confirm('Delete this reply?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="btn btn-link btn-sm text-danger p-0" type="submit">Delete reply</button>
+        </form>
+        {% endif %}
+      </div>
     </div>
   {% else %}
     <p class="text-muted">No replies yet.</p>

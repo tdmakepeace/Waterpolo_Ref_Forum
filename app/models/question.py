@@ -35,7 +35,7 @@ class Question(db.Model):
         "Reply",
         back_populates="question",
         cascade="all, delete-orphan",
-        order_by="Reply.created_at",
+        order_by="desc(Reply.is_high_quality), desc(Reply.created_at)",
     )
     votes = db.relationship(
         "Vote", back_populates="question", cascade="all, delete-orphan"
@@ -55,5 +55,12 @@ class Question(db.Model):
         if user is None or not getattr(user, "is_authenticated", False):
             return False
         if getattr(user, "is_staff", False):
+            return True
+        return user.id == self.user_id
+
+    def can_mark_high_quality(self, user):
+        if user is None or not getattr(user, "is_authenticated", False):
+            return False
+        if getattr(user, "is_admin", False):
             return True
         return user.id == self.user_id

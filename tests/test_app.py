@@ -1,4 +1,5 @@
 import pytest
+from datetime import datetime, timedelta, timezone
 
 from app import create_app
 from app.extensions import db
@@ -133,6 +134,121 @@ def test_closed_question_rejects_reply(app, client):
     assert b"closed to new replies" in response.data
     with app.app_context():
         assert Reply.query.filter_by(question_id=qid).count() == 0
+
+
+def test_replies_newest_first_with_high_quality_on_top(app, client):
+    with app.app_context():
+        owner = _make_user("ownerhq@example.com", nickname="OwnerHQ")
+        q = Question(
+            user_id=owner.id,
+            author_nickname=owner.nickname,
+            title="Offside at 2m",
+            body="When is a player offside near the two metre line?",
+        )
+        db.session.add(q)
+        db.session.commit()
+        now = datetime.now(timezone.utc)
+        db.session.add_all(
+            [
+                Reply(
+                    question_id=q.id,
+                    user_id=owner.id,
+                    author_nickname=owner.nickname,
+                    body="oldest regular reply",
+                    created_at=now - timedelta(minutes=4),
+                ),
+                Reply(
+                    question_id=q.id,
+                    user_id=owner.id,
+                    author_nickname=owner.nickname,
+                    body="older high quality reply",
+                    is_high_quality=True,
+                    created_at=now - timedelta(minutes=3),
+                ),
+                Reply(
+                    question_id=q.id,
+                    user_id=owner.id,
+                    author_nickname=owner.nickname,
+                    body="newest regular reply",
+                    created_at=now - timedelta(minutes=1),
+                ),
+                Reply(
+                    question_id=q.id,
+                    user_id=owner.id,
+                    author_nickname=owner.nickname,
+                    body="newest high quality reply",
+                    is_high_quality=True,
+                    created_at=now,
+                ),
+            ]
+        )
+        db.session.commit()
+        qid = q.id
+
+    page = client.get(f"/questions/{qid}").data
+    newest_hq = page.find(b"newest high quality reply")
+    older_hq = page.find(b"older high quality reply")
+    newest_regular = page.find(b"newest regular reply")
+    oldest_regular = page.find(b"oldest regular reply")
+    assert newest_hq != -1
+    assert newest_hq < older_hq < newest_regular < oldest_regular
+
+
+def test_only_owner_or_admin_can_mark_high_quality(app, client):
+    with app.app_context():
+        owner = _make_user("qowner@example.com", nickname="QOwner")
+        other = _make_user("otherhq@example.com", nickname="OtherHQ")
+        _make_user("suphq@example.com", nickname="SupHQ", role="supervisor")
+        _make_user("adminhq@example.com", nickname="AdminHQ", role="admin")
+        q = Question(
+            user_id=owner.id,
+            author_nickname=owner.nickname,
+            title="Penalty shot or exclusion",
+            body="How should this foul inside 6m be called?",
+        )
+        db.session.add(q)
+        db.session.commit()
+        reply = Reply(
+            question_id=q.id,
+            user_id=other.id,
+            author_nickname=other.nickname,
+            body="I would call a penalty shot here.",
+        )
+        db.session.add(reply)
+        db.session.commit()
+        qid = q.id
+        rid = reply.id
+
+    def mark():
+        return client.post(f"/replies/{rid}/high-quality", follow_redirects=True)
+
+    client.post("/login", data={"email": "otherhq@example.com", "password": "password12"})
+    assert mark().status_code == 403
+    page = client.get(f"/questions/{qid}")
+    assert b"Mark as high quality" not in page.data
+    client.get("/logout")
+
+    client.post("/login", data={"email": "suphq@example.com", "password": "password12"})
+    assert mark().status_code == 403
+    client.get("/logout")
+
+    client.post("/login", data={"email": "qowner@example.com", "password": "password12"})
+    owner_page = client.get(f"/questions/{qid}")
+    assert b"Mark as high quality" in owner_page.data
+    marked = mark()
+    assert marked.status_code == 200
+    assert b"High quality" in marked.data
+    assert b"Remove high quality" in marked.data
+    with app.app_context():
+        assert Reply.query.get(rid).is_high_quality is True
+    client.get("/logout")
+
+    client.post("/login", data={"email": "adminhq@example.com", "password": "password12"})
+    unmarked = mark()
+    assert unmarked.status_code == 200
+    assert b"Remove high quality" not in unmarked.data
+    with app.app_context():
+        assert Reply.query.get(rid).is_high_quality is False
 
 
 def test_hidden_visibility(app, client):

@@ -33,3 +33,9 @@
   line-height: 1;
   padding: 0.15rem 0.45rem;
 }
+
+.reply-high-quality {
+  border-left: 3px solid #0b3d5c;
+  padding-left: 0.75rem;
+  background: rgba(11, 61, 92, 0.06);
+}
