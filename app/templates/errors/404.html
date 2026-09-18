@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Not found{% endblock %}
+{% block content %}
+<div class="panel">
+  <h1 class="h3">404 — Not found</h1>
+  <p>That page or thread is not available.</p>
+  <a href="{{ url_for('main.home') }}">Back to home</a>
+</div>
+{% endblock %}

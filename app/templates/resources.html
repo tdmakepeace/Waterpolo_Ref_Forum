@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Resources{% endblock %}
+{% block content %}
+<div class="panel">
+  <h1 class="h3 mb-3">Resources</h1>
+  {% for link in links %}
+    <div class="mb-3">
+      <a href="{{ link.url }}" target="_blank" rel="noopener">{{ link.title }}</a>
+      {% if link.description %}<p class="text-muted mb-0">{{ link.description }}</p>{% endif %}
+    </div>
+  {% else %}
+    <p class="text-muted">No resource links yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Password reset requests{% endblock %}
+{% block content %}
+<div class="panel">
+  <h1 class="h3 mb-3">Password reset requests</h1>
+  {% if issued_link %}
+    <div class="alert alert-success">
+      Copy this one-time link and send it to the user:<br>
+      <code>{{ issued_link }}</code>
+    </div>
+  {% endif %}
+  {% for r in requests %}
+    <div class="border rounded p-3 mb-2 d-flex justify-content-between align-items-center">
+      <div>
+        <strong>{{ r.user.email }}</strong> · {{ r.user.nickname }}
+        <div class="small text-muted">Requested {{ r.requested_at }}
+          {% if r.token_hash %} · link already issued{% endif %}
+        </div>
+      </div>
+      {% if not r.used_at %}
+      <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="request_id" value="{{ r.id }}">
+        <button class="btn btn-primary btn-sm" type="submit">Issue reset link</button>
+      </form>
+      {% endif %}
+    </div>
+  {% else %}
+    <p class="text-muted">No open reset requests.</p>
+  {% endfor %}
+</div>
+{% endblock %}

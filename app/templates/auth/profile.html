@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Profile — {{ site_title }}{% endblock %}
+{% block content %}
+<div class="panel col-lg-6 mx-auto">
+  <h1 class="h3 mb-3">Your profile</h1>
+  <p class="text-muted">Public nickname: <strong>{{ current_user.nickname }}</strong></p>
+
+  <h2 class="h5 mt-4">Change nickname</h2>
+  <p class="small text-muted">Leave blank to receive a new random nickname.</p>
+  <form method="post" class="mb-4">
+    {{ nick_form.hidden_tag() }}
+    <input type="hidden" name="form_name" value="nickname">
+    <div class="mb-3">{{ nick_form.nickname.label(class="form-label") }} {{ nick_form.nickname(class="form-control") }}
+      {% for e in nick_form.nickname.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}</div>
+    <button class="btn btn-outline-primary" type="submit">Save nickname</button>
+  </form>
+
+  <h2 class="h5">Change password</h2>
+  <form method="post">
+    {{ pass_form.hidden_tag() }}
+    <input type="hidden" name="form_name" value="password">
+    <div class="mb-3">{{ pass_form.current_password.label(class="form-label") }} {{ pass_form.current_password(class="form-control") }}</div>
+    <div class="mb-3">{{ pass_form.new_password.label(class="form-label") }} {{ pass_form.new_password(class="form-control") }}
+      {% for e in pass_form.new_password.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}</div>
+    <div class="mb-3">{{ pass_form.confirm.label(class="form-label") }} {{ pass_form.confirm(class="form-control") }}
+      {% for e in pass_form.confirm.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}</div>
+    <button class="btn btn-primary" type="submit">Update password</button>
+  </form>
+</div>
+{% endblock %}

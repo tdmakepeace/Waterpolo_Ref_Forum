@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Moderate questions{% endblock %}
+{% block content %}
+<div class="panel">
+  <h1 class="h3 mb-3">Questions</h1>
+  <div class="table-responsive">
+    <table class="table">
+      <thead><tr><th>Title</th><th>Author</th><th>Status</th><th>Hidden</th><th>Score</th><th></th></tr></thead>
+      <tbody>
+        {% for q in questions %}
+        <tr>
+          <td><a href="{{ url_for('forum.detail', question_id=q.id) }}">{{ q.title }}</a></td>
+          <td>{{ q.author_nickname }}</td>
+          <td>{{ q.status }}</td>
+          <td>{{ "yes" if q.is_hidden else "no" }}</td>
+          <td>{{ q.score }}</td>
+          <td>
+            <form class="d-inline" method="post" action="{{ url_for('forum.delete_question', question_id=q.id) }}" onsubmit="return confirm('Delete this question?');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-link btn-sm text-danger p-0" type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

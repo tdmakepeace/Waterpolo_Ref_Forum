@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Staff dashboard{% endblock %}
+{% block content %}
+<div class="panel">
+  <h1 class="h3 mb-3">Staff dashboard</h1>
+  <div class="row g-3">
+    <div class="col-md-4">
+      <div class="border rounded p-3">
+        <div class="text-muted small">Questions</div>
+        <div class="fs-3">{{ question_count }}</div>
+        <a href="{{ url_for('admin.questions') }}">Moderate threads</a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="border rounded p-3">
+        <div class="text-muted small">Users</div>
+        <a href="{{ url_for('admin.users') }}">Add / modify users</a>
+        {% if current_user.is_admin %}
+        <div class="mt-2">Pending approvals: {{ pending_count }} — <a href="{{ url_for('admin.pending_users') }}">review</a></div>
+        {% endif %}
+      </div>
+    </div>
+    {% if current_user.is_admin %}
+    <div class="col-md-4">
+      <div class="border rounded p-3">
+        <div class="text-muted small">Admin only</div>
+        <div>Open reset requests: {{ reset_count }}</div>
+        <a href="{{ url_for('admin.reset_requests') }}">Issue reset links</a><br>
+        <a href="{{ url_for('admin.links') }}">Resource links</a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

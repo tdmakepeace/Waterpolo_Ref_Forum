@@ -1,0 +1,35 @@
+.navbar.bg-dark {
+  background-color: rgba(12, 18, 28, 0.92) !important;
+}
+
+.panel {
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.score {
+  min-width: 3rem;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.badge-hidden {
+  background: #6c757d;
+}
+
+.question-row a.title {
+  font-weight: 600;
+  color: #0b3d5c;
+  text-decoration: none;
+}
+
+.question-row a.title:hover {
+  text-decoration: underline;
+}
+
+.vote-btn {
+  line-height: 1;
+  padding: 0.15rem 0.45rem;
+}

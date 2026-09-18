@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Request password reset{% endblock %}
+{% block content %}
+<div class="panel col-lg-5 mx-auto">
+  <h1 class="h3 mb-3">Request a password reset</h1>
+  <p>An Admin will issue a one-time link. This is not sent automatically.</p>
+  <form method="post">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">{{ form.email.label(class="form-label") }} {{ form.email(class="form-control") }}</div>
+    <button class="btn btn-primary" type="submit">Submit request</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+.env
+config.yml
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+instance/
+*.db
+.flaskenv
+.coverage
+htmlcov/
+.idea/
+.vscode/
+migrations/__pycache__/
+

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Pending registrations{% endblock %}
+{% block content %}
+<div class="panel">
+  <h1 class="h3 mb-3">Pending registrations</h1>
+  {% for u in users %}
+    <div class="border rounded p-3 mb-2 d-flex justify-content-between align-items-center">
+      <div>
+        <strong>{{ u.email }}</strong> · {{ u.nickname }}
+        {% if u.real_name %}<span class="text-muted">({{ u.real_name }})</span>{% endif %}
+      </div>
+      <div class="d-flex gap-2">
+        <form method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="user_id" value="{{ u.id }}">
+          <input type="hidden" name="action" value="approve">
+          <button class="btn btn-success btn-sm" type="submit">Approve</button>
+        </form>
+        <form method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="user_id" value="{{ u.id }}">
+          <input type="hidden" name="action" value="reject">
+          <button class="btn btn-outline-danger btn-sm" type="submit">Reject</button>
+        </form>
+      </div>
+    </div>
+  {% else %}
+    <p class="text-muted">No pending accounts.</p>
+  {% endfor %}
+</div>
+{% endblock %}

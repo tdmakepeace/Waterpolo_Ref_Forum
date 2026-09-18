@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Resource links{% endblock %}
+{% block content %}
+<div class="panel">
+  <div class="d-flex justify-content-between mb-3">
+    <h1 class="h3 mb-0">Resource links</h1>
+    <a class="btn btn-primary" href="{{ url_for('admin.link_new') }}">Add link</a>
+  </div>
+  {% for link in links %}
+    <div class="border rounded p-3 mb-2 d-flex justify-content-between">
+      <div>
+        <a href="{{ link.url }}" target="_blank" rel="noopener">{{ link.title }}</a>
+        <div class="small text-muted">{{ link.url }} · order {{ link.sort_order }} · {{ "active" if link.is_active else "inactive" }}</div>
+      </div>
+      <div>
+        <a href="{{ url_for('admin.link_edit', link_id=link.id) }}">Edit</a>
+        <form class="d-inline" method="post" action="{{ url_for('admin.link_delete', link_id=link.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="btn btn-link btn-sm text-danger" type="submit">Delete</button>
+        </form>
+      </div>
+    </div>
+  {% else %}
+    <p class="text-muted">No links yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

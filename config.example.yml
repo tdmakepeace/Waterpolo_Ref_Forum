@@ -1,0 +1,17 @@
+database:
+  host: db
+  port: 5432
+  name: waterpolo_forum
+  username: forum
+  password: change-me
+
+site_title: "LWPL - Referee Forum"
+
+backdrop_image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Paris2024_Water-Polo_Italy-Montenegro_001.jpg/1920px-Paris2024_Water-Polo_Italy-Montenegro_001.jpg"
+
+first_admin:
+  email: admin@example.com
+  password: change-me-admin
+  nickname: HeadRef
+
+reset_first_admin_password: false
